@@ -45,8 +45,8 @@ const createOne = async (req, res) => {
     const pokeData = {
         pokedexNo: req.body.pokedexNo,
         name: req.body.name,
-        nickname: req.body.name,
-        level: req.body.name,
+        nickname: req.body.nickname,
+        level: req.body.level,
         nature: req.body.nature,
         heldItem: req.body.heldItem,
         originalTrainer: req.body.originalTrainer
@@ -67,30 +67,30 @@ const updateOne = async (req, res) => {
     const pokeData = {
         pokedexNo: req.body.pokedexNo,
         name: req.body.name,
-        nickname: req.body.name,
-        level: req.body.name,
+        nickname: req.body.nickname,
+        level: req.body.level,
         nature: req.body.nature,
         heldItem: req.body.heldItem,
         originalTrainer: req.body.originalTrainer
     };
     const result = await mongodb.getDatabase().db().collection('pokemon').replaceOne({_id: pokemonId}, pokeData);
     if (result.modifiedCount > 0) {
-        res.status(200).send();
+        res.status(204).send();
     } else {
-        res.status(400).json(result.error || "An error occurred while updating a Pokemon.");
+        res.status(500).json(result.error || "An error occurred while updating a Pokemon.");
     }
 }
 
-const deleteOne = async (req, res) => {
+const eraseOne = async (req, res) => {
     if (!ObjectId.isValid(req.params.id)) {
         res.status(400).json("Must enter a valid ID to delete a Pokemon entry.");
     }
     const pokemonId = new ObjectId(req.params.id);
     const result = await mongodb.getDatabase().db().collection('pokemon').deleteOne({_id: pokemonId});
     if (result.deletedCount > 0) {
-        res.status(200).send();
+        res.status(204).send();
     } else {
-        res.status(400).json(result.error || "An error occurred while deleting a Pokemon.");
+        res.status(500).json(result.error || "An error occurred while deleting a Pokemon.");
     }
 }
 
@@ -99,5 +99,5 @@ module.exports = {
     getSingle,
     createOne,
     updateOne,
-    deleteOne
+    eraseOne
 }
