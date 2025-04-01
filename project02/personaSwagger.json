@@ -10,27 +10,6 @@
   "schemes": [
     "https"
   ],
-  "paths": {
-    "/": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/personaApi-docs": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/persona/": {
       "get": {
         "description": "",
@@ -195,4 +174,3 @@
       }
     }
   }
-}
