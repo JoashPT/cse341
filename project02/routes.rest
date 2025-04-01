@@ -1,4 +1,5 @@
 //Localhost
+//For pokemon
 ### Get all pokemon
 GET http://localhost:3000/pokemon
 
@@ -34,4 +35,43 @@ content-type: application/json
 }
 
 ### Delete one pokemon
-DELETE http://localhost:3000/pokemon/67e6a3321cf157f4d3b1b281 HTTP/1.1
+DELETE http://localhost:3000/pokemon/67ea43ec776d89e33d7e5907 HTTP/1.1
+
+//For Persona
+### Get all persona
+GET http://localhost:3000/persona
+
+### Get one persona
+GET http://localhost:3000/persona/67ea44a2776d89e33d7e5908
+
+### Create one persona
+POST http://localhost:3000/persona HTTP/1.1
+content-type: application/json
+
+{
+  "persona": "Kagura",
+  "arcana": "Priestess",
+  "level": 15,
+  "awakenInto": "N/A",
+  "firstAppearance": "Mobile Legends",
+  "user": "Lemon",
+  "denote": "Original"
+
+}
+
+### Update one persona
+PUT http://localhost:3000/persona/67ea44a2776d89e33d7e5908 HTTP/1.1
+content-type: application/json
+
+{
+  "persona": "Kagura",
+  "arcana": "Priestess",
+  "level": 15,
+  "awakenInto": "N/A",
+  "firstAppearance": "Mobile Legends",
+  "user": "Lemon",
+  "denote": "Original"
+}
+
+### Delete one persona
+DELETE http://localhost:3000/persona/67ea44a2776d89e33d7e5908 HTTP/1.1

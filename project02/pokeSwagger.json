@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Users API",
-    "description": "Users API",
+    "title": "Pokemon Users API",
+    "description": "Pokemon Users API",
     "version": "1.0.0"
   },
   "host": "cse341-1-nuum.onrender.com",
@@ -17,6 +17,16 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/pokeApi-docs": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
           }
         }
       }

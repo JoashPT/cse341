@@ -1,8 +1,15 @@
 const router = require('express').Router();
 const swaggerUI = require('swagger-ui-express');
-const swaggerDocument = require('../swagger.json');
+const pokeSwaggerDocument = require('../pokeSwagger.json');
+const personaSwaggerDocument = require('../personaSwagger.json');
 
-router.use('/api-docs', swaggerUI.serve);
-router.get('/api-docs', swaggerUI.setup(swaggerDocument));
+
+router.use('/personapi-docs', swaggerUI.serveFiles(personaSwaggerDocument));
+router.get('/personapi-docs', swaggerUI.setup(personaSwaggerDocument));
+
+router.use('/pokeapi-docs', swaggerUI.serveFiles(pokeSwaggerDocument));
+router.get('/pokeapi-docs', swaggerUI.setup(pokeSwaggerDocument));
+
+
 
 module.exports = router;

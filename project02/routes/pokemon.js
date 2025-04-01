@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const pokemonControl = require('../controller/controller');
+const pokemonControl = require('../controller/pokeController');
 const validation = require('../middleware/validate');
 
 router.get('/', pokemonControl.getAll);
