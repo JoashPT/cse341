@@ -4,7 +4,7 @@
 GET http://localhost:3000/pokemon
 
 ### Get one pokemon
-GET http://localhost:3000/pokemon/67e6a1d4496a77491ab327
+GET http://localhost:3000/pokemon/67ecc3520b9b2bdcc0ff7191
 
 ### Create one pokemon
 POST http://localhost:3000/pokemon HTTP/1.1
@@ -14,14 +14,14 @@ content-type: application/json
   "pokedexNo": 0,
   "name": "MissingNo",
   "nickname": "Cartridge",
-  "level": 0,
+  "level": "asd",
   "nature": "???",
   "heldItem": "",
   "originalTrainer": "???"
 }
 
 ### Update one pokemon
-PUT http://localhost:3000/pokemon/67e6a1d4496a77491ab327e9 HTTP/1.1
+PUT http://localhost:3000/pokemon/67ecc3520b9b2bdcc0ff7191 HTTP/1.1
 content-type: application/json
 
 {
@@ -35,14 +35,14 @@ content-type: application/json
 }
 
 ### Delete one pokemon
-DELETE http://localhost:3000/pokemon/67ea43ec776d89e33d7e5907 HTTP/1.1
+DELETE http://localhost:3000/pokemon/67ecc3520b9b2bdcc0ff7191 HTTP/1.1
 
 //For Persona
 ### Get all persona
 GET http://localhost:3000/persona
 
 ### Get one persona
-GET http://localhost:3000/persona/67ea44a2776d89e33d7e5908
+GET http://localhost:3000/persona/67ecb3999ccea7b798073ea7
 
 ### Create one persona
 POST http://localhost:3000/persona HTTP/1.1
@@ -51,7 +51,7 @@ content-type: application/json
 {
   "persona": "Kagura",
   "arcana": "Priestess",
-  "level": 15,
+  "level": "15",
   "awakenInto": "N/A",
   "firstAppearance": "Mobile Legends",
   "user": "Lemon",
@@ -60,18 +60,18 @@ content-type: application/json
 }
 
 ### Update one persona
-PUT http://localhost:3000/persona/67ea44a2776d89e33d7e5908 HTTP/1.1
+PUT http://localhost:3000/persona/67ecb3999ccea7b798073ea7 HTTP/1.1
 content-type: application/json
 
 {
-  "persona": "Kagura",
-  "arcana": "Priestess",
+  "persona": "Hanabi",
+  "arcana": "Star",
   "level": 15,
   "awakenInto": "N/A",
   "firstAppearance": "Mobile Legends",
-  "user": "Lemon",
+  "user": "Jenkin",
   "denote": "Original"
 }
 
 ### Delete one persona
-DELETE http://localhost:3000/persona/67ea44a2776d89e33d7e5908 HTTP/1.1
+DELETE http://localhost:3000/persona/67ecbfb0a3c75dc511127766 HTTP/1.1
