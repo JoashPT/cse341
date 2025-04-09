@@ -74,6 +74,8 @@ passport.deserializeUser((user, done) => {
 
 app.get('/', (req, res) => {res.send(req.session.user !== undefined ? `Logged in as ${req.session.user.displayName}` : "Logged Out")});
 
+app.get('/google', passport.authenticate({scope: ['profile']}));
+
 app.get('/google/callback', passport.authenticate('google', {
     failureRedirect: '/pokeapi-docs', session: false }),
     (req, res) => {
