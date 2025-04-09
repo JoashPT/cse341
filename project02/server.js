@@ -22,7 +22,7 @@ app
             checkPeriod: 86400000
         }),
         secret: "secret",
-        reseave: false,
+        resave: false,
         saveUninitialized: true
     }))
     .use(passport.initialize())
@@ -72,16 +72,14 @@ passport.deserializeUser((user, done) => {
     done(null, user);
 })
 
-app.get('/', (req, res) => {res.send(req.session.user !== undefined ? `Logged in as ${req.session.user.displayName}` : "Logged Out")});
-
-//app.get('/github', passport.authenticate({scope: ['profile']}));
+app.get('/', (req, res) => {res.send(req.session.user !== undefined ? `Logged in as ${req.session.user.username}` : "Logged Out")});
 
 // *** Github redirect ***
 app.get('/github/callback', passport.authenticate('github', {
-    failureRedirect: '/', session: false }),
+    failureRedirect: '/pokeapi-docs', session: false }),
     (req, res) => {
         req.session.user = req.user;
-        res.redirect('/pokeapi-docs');
+        res.redirect('/');
     });
 
 // *** Google Redirect ***
