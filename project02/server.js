@@ -4,8 +4,8 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
-//const GitHubStrategy = require('passport-github2').Strategy;
-const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
+const GitHubStrategy = require('passport-github2').Strategy;
+//const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 const cors = require('cors');
 
 const app = express();
@@ -42,27 +42,27 @@ process.on('uncaughtException', (err, origin) => {
 })
 
 
-// Using GitHub strategy
-// passport.use(new GitHubStrategy({
-//     clientID: process.env.GITHUB_CLIENT_ID,
-//     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-//     callbackURL: process.env.CALLBACK_URL
-// },
-// function(accessToken, refreshToken, profile, done) {
-//     return done(null, profile);
-// }))
+// *** Using GitHub strategy ***
+passport.use(new GitHubStrategy({
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: process.env.CALLBACK_URL
+},
+function(accessToken, refreshToken, profile, done) {
+    return done(null, profile);
+}));
 
-// Using  Google Strategy
-passport.use(new GoogleStrategy({
-    clientID:     process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.CALLBACK_URL,
-    passReqToCallback   : true
-  },
-  User.findOrCreate({ googleId: profile.id }, function (err, user) {
-    return done(err, user);
-  }))
-);
+// *** Using  Google Strategy ***
+// passport.use(new GoogleStrategy({
+//     clientID:     process.env.GOOGLE_CLIENT_ID,
+//     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//     callbackURL: process.env.CALLBACK_URL,
+//     passReqToCallback   : true
+//   },
+//   User.findOrCreate({ googleId: profile.id }, function (err, user) {
+//     return done(err, user);
+//   }))
+// );
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -74,22 +74,22 @@ passport.deserializeUser((user, done) => {
 
 app.get('/', (req, res) => {res.send(req.session.user !== undefined ? `Logged in as ${req.session.user.displayName}` : "Logged Out")});
 
-app.get('/google', passport.authenticate({scope: ['profile']}));
+//app.get('/github', passport.authenticate({scope: ['profile']}));
 
 // *** Github redirect ***
-// app.get('/google/callback', passport.authenticate('google', {
-//     failureRedirect: '/pokeapi-docs', session: false }),
-//     (req, res) => {
-//         req.session.user = req.user;
-//         res.redirect('/');
-//     });
+app.get('/github/callback', passport.authenticate('github', {
+    failureRedirect: '/', session: false }),
+    (req, res) => {
+        req.session.user = req.user;
+        res.redirect('/');
+    });
 
 // *** Google Redirect ***
-app.get( 'google/callback',
-    passport.authenticate( 'google', {
-        successRedirect: '/',
-        failureRedirect: '/'
-}));
+// app.get( 'google/callback',
+//     passport.authenticate( 'google', {
+//         successRedirect: '/',
+//         failureRedirect: '/'
+// }));
 
 mongodb.initDb((err) => {
     if (err) {

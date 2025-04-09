@@ -6,7 +6,7 @@ router.use('/', require('./swagger'));
 router.use('/pokemon', require('./pokemon'));
 router.use('/persona', require('./persona'));
 
-router.get('/login', passport.authenticate('google'), (req, res) => {});
+router.get('/login', passport.authenticate('github'), (req, res) => {});
 
 router.get('/logout', (req, res, next) => {
     req.logout((err) => {
