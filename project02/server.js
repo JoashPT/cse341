@@ -15,12 +15,12 @@ const port = process.env.PORT || 3000;
 app
     .use(bodyParser.json())
     .use(session({
-        cookie: { 
-            secure: true,
-            maxAge: 86400000 },
-        store: new MemoryStore({
-            checkPeriod: 86400000
-        }),
+        // cookie: { 
+        //     secure: true,
+        //     maxAge: 86400000 },
+        // store: new MemoryStore({
+        //     checkPeriod: 86400000
+        // }),
         secret: "secret",
         resave: false,
         saveUninitialized: true
