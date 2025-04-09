@@ -3,9 +3,7 @@ const mongodb = require('./data/database');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const session = require('express-session');
-const MemoryStore = require('memorystore')(session);
 const GitHubStrategy = require('passport-github2').Strategy;
-//const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 const cors = require('cors');
 
 const app = express();
@@ -15,12 +13,6 @@ const port = process.env.PORT || 3000;
 app
     .use(bodyParser.json())
     .use(session({
-        // cookie: { 
-        //     secure: true,
-        //     maxAge: 86400000 },
-        // store: new MemoryStore({
-        //     checkPeriod: 86400000
-        // }),
         secret: "secret",
         resave: false,
         saveUninitialized: true
@@ -52,18 +44,6 @@ function(accessToken, refreshToken, profile, done) {
     return done(null, profile);
 }));
 
-// *** Using  Google Strategy ***
-// passport.use(new GoogleStrategy({
-//     clientID:     process.env.GOOGLE_CLIENT_ID,
-//     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//     callbackURL: process.env.CALLBACK_URL,
-//     passReqToCallback   : true
-//   },
-//   User.findOrCreate({ googleId: profile.id }, function (err, user) {
-//     return done(err, user);
-//   }))
-// );
-
 passport.serializeUser((user, done) => {
     done(null, user);
 })
@@ -81,13 +61,6 @@ app.get('/github/callback', passport.authenticate('github', {
         req.session.user = req.user;
         res.redirect('/');
     });
-
-// *** Google Redirect ***
-// app.get( 'google/callback',
-//     passport.authenticate( 'google', {
-//         successRedirect: '/',
-//         failureRedirect: '/'
-// }));
 
 mongodb.initDb((err) => {
     if (err) {
