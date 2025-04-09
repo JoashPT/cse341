@@ -59,9 +59,9 @@ passport.use(new GoogleStrategy({
     callbackURL: process.env.CALLBACK_URL,
     passReqToCallback   : true
   },
-  async (request, accessToken, refreshToken, profile, done) => {
-      return done(null, profile);
-    })
+  User.findOrCreate({ googleId: profile.id }, function (err, user) {
+    return done(err, user);
+  }))
 );
 
 passport.serializeUser((user, done) => {
@@ -76,12 +76,20 @@ app.get('/', (req, res) => {res.send(req.session.user !== undefined ? `Logged in
 
 app.get('/google', passport.authenticate({scope: ['profile']}));
 
-app.get('/google/callback', passport.authenticate('google', {
-    failureRedirect: '/pokeapi-docs', session: false }),
-    (req, res) => {
-        req.session.user = req.user;
-        res.redirect('/');
-    });
+// *** Github redirect ***
+// app.get('/google/callback', passport.authenticate('google', {
+//     failureRedirect: '/pokeapi-docs', session: false }),
+//     (req, res) => {
+//         req.session.user = req.user;
+//         res.redirect('/');
+//     });
+
+// *** Google Redirect ***
+app.get( 'google/callback',
+    passport.authenticate( 'google', {
+        successRedirect: '/',
+        failureRedirect: '/'
+}));
 
 mongodb.initDb((err) => {
     if (err) {
