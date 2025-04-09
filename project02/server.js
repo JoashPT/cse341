@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
-const GitHubStrategy = require('passport-github2').Strategy;
+//const GitHubStrategy = require('passport-github2').Strategy;
+const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 const cors = require('cors');
 
 const app = express();
@@ -40,14 +41,28 @@ process.on('uncaughtException', (err, origin) => {
     console.log(process.stderr.fd, `Caught exception: ${err}\n` + `Exception origin: ${origin}\n`)
 })
 
-passport.use(new GitHubStrategy({
-    clientID: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: process.env.CALLBACK_URL
-},
-function(accessToken, refreshToken, profile, done) {
-    return done(null, profile);
-}))
+
+// Using GitHub strategy
+// passport.use(new GitHubStrategy({
+//     clientID: process.env.GITHUB_CLIENT_ID,
+//     clientSecret: process.env.GITHUB_CLIENT_SECRET,
+//     callbackURL: process.env.CALLBACK_URL
+// },
+// function(accessToken, refreshToken, profile, done) {
+//     return done(null, profile);
+// }))
+
+// Using  Google Strategy
+passport.use(new GoogleStrategy({
+    clientID:     process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.CALLBACK_URL,
+    passReqToCallback   : true
+  },
+  async (request, accessToken, refreshToken, profile, done) => {
+      return done(null, profile);
+    })
+);
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -59,7 +74,7 @@ passport.deserializeUser((user, done) => {
 
 app.get('/', (req, res) => {res.send(req.session.user !== undefined ? `Logged in as ${req.session.user.displayName}` : "Logged Out")});
 
-app.get('/github/callback', passport.authenticate('github', {
+app.get('/google/callback', passport.authenticate('google', {
     failureRedirect: '/pokeapi-docs', session: false }),
     (req, res) => {
         req.session.user = req.user;
