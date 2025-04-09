@@ -81,7 +81,7 @@ app.get('/github/callback', passport.authenticate('github', {
     failureRedirect: '/', session: false }),
     (req, res) => {
         req.session.user = req.user;
-        res.redirect('/');
+        res.redirect('/pokeapi-docs');
     });
 
 // *** Google Redirect ***
