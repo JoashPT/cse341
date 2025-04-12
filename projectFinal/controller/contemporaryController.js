@@ -105,7 +105,7 @@ const updateOne = async (req, res) => {
 
         const contemporaryExist = await mongodb.getDatabase().db().collection('contemporary').findOne({ _id: new ObjectId(req.params.id) });
             if(!contemporaryExist) {
-                throw new Error("Must enter an existing ID to find contemporary music.");
+                throw new Error("Must enter an existing ID to update contemporary music.");
             }
         
         try {

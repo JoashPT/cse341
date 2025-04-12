@@ -18,9 +18,11 @@
     "express": "^5.1.0",
     "express-session": "^1.18.1",
     "mongodb": "^6.15.0",
+    "swagger-ui-express": "^5.0.1",
     "validatorjs": "^3.22.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "swagger-autogen": "^2.23.7"
   }
 }
