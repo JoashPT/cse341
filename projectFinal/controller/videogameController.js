@@ -6,7 +6,7 @@ const getAll = async (req, res) => {
     mongodb
         .getDatabase()
         .db()
-        .collection('classical')
+        .collection('videogame')
         .find()
         .toArray()
         .then((list) => {
@@ -23,24 +23,24 @@ const getAll = async (req, res) => {
 const getSingle = async (req, res) => {
     try {
         if (!ObjectId.isValid(req.params.id)) {
-            throw new Error('Must enter a valid ID to find classical piece.');
+            throw new Error('Must enter a valid ID to find videogame music.');
         }
         
-        const classicalId = new ObjectId(req.params.id);
-        const classicalExist = await mongodb.getDatabase().db().collection('classical').findOne({ _id: new ObjectId(req.params.id) });
-                if(!classicalExist) {
-                    throw new Error("Must enter an existing ID to find classical piece.");
+        const videogameId = new ObjectId(req.params.id);
+        const videogameExist = await mongodb.getDatabase().db().collection('videogame').findOne({ _id: new ObjectId(req.params.id) });
+                if(!videogameExist) {
+                    throw new Error("Must enter an existing ID to find videogame music.");
                 }
 
         mongodb
             .getDatabase()
             .db()
-            .collection('classical')
-            .find({_id: classicalId})
+            .collection('videogame')
+            .find({_id: videogameId})
             .toArray()
-            .then((classical) => {
+            .then((videogame) => {
                 res.setHeader('Content-Type', 'application/json');
-                res.status(200).json(classical[0])
+                res.status(200).json(videogame[0])
             })
             .catch((err) => {
                 if (err) {
@@ -52,20 +52,20 @@ const getSingle = async (req, res) => {
     }
 }
 
-const getPeriod = async (req, res) => {
+const getVideogame = async (req, res) => {
     try {
         mongodb
             .getDatabase()
             .db()
-            .collection('classical')
-            .find({period: req.params.period})
+            .collection('videogame')
+            .find({videogame: req.params.videogame})
             .toArray()
-            .then((classical) => {
-                if (classical.length === 0) {
-                    throw new Error('No piece found with the given period.');
+            .then((videogame) => {
+                if (videogame.length === 0) {
+                    throw new Error('No song found with the given genre.');
                   }
                 res.setHeader('Content-Type', 'application/json');
-                res.status(200).json(classical)
+                res.status(200).json(videogame)
             })
             .catch((err) => {
                 if (err) {
@@ -79,17 +79,15 @@ const getPeriod = async (req, res) => {
 
 const createOne = async (req, res) => {
     try {
-        const classicalData = {
-            form: req.body.form,
-            opus: req.body.opus,
-            number: req.body.number,
-            key: req.body.key,
+        const videogameData = {
+            title: req.body.title,
+            videogame: req.body.videogame,
             composer: req.body.composer,
-            period: req.body.period,
+            date: req.body.date,
             link: req.body.link,
             comment: req.body.comment
         };
-        const result = await mongodb.getDatabase().db().collection('classical').insertOne(classicalData);
+        const result = await mongodb.getDatabase().db().collection('videogame').insertOne(videogameData);
         if (result.acknowledged) {
             res.status(204).send();
         }
@@ -101,32 +99,30 @@ const createOne = async (req, res) => {
 const updateOne = async (req, res) => {
     try {
         if (!ObjectId.isValid(req.params.id)) {
-            throw new Error("Must enter a valid ID to update a classical piece.");
+            throw new Error("Must enter a valid ID to update videogame music.");
         }
 
-        const classicalExist = await mongodb.getDatabase().db().collection('classical').findOne({ _id: new ObjectId(req.params.id) });
-            if(!classicalExist) {
-                throw new Error("Must enter an existing ID to find a classical piece.");
+        const videogameExist = await mongodb.getDatabase().db().collection('videogame').findOne({ _id: new ObjectId(req.params.id) });
+            if(!videogameExist) {
+                throw new Error("Must enter an existing ID to update videogame music.");
             }
         
         try {
-            const classicalId = new ObjectId(req.params.id);
-            const classicalData = {
-                form: req.body.form,
-                opus: req.body.opus,
-                number: req.body.number,
-                key: req.body.key,
+            const videogameId = new ObjectId(req.params.id);
+            const videogameData = {
+                title: req.body.title,
+                videogame: req.body.videogame,
                 composer: req.body.composer,
-                period: req.body.period,
+                date: req.body.date,
                 link: req.body.link,
                 comment: req.body.comment
             };
-            const result = await mongodb.getDatabase().db().collection('classical').replaceOne({_id: classicalId}, classicalData);
+            const result = await mongodb.getDatabase().db().collection('videogame').replaceOne({_id: videogameId}, videogameData);
             if (result.modifiedCount > 0) {
                 res.status(204).send();
             }
         } catch (error) {
-            res.status(500).json(error || "An error occurred while updating a classical.");
+            res.status(500).json(error || "An error occurred while updating a record.");
         }
     } catch (error) {
         res.status(400).json({error: error.message});
@@ -136,22 +132,22 @@ const updateOne = async (req, res) => {
 const eraseOne = async (req, res) => {
     try {
         if (!ObjectId.isValid(req.params.id)) {
-            throw new Error("Must enter a valid ID to delete a classical music entry.");
+            throw new Error("Must enter a valid ID to delete an entry.");
         }
 
-        const classicalExist = await mongodb.getDatabase().db().collection('classical').findOne({ _id: new ObjectId(req.params.id) });
-        if(!classicalExist) {
-            throw new Error("Must enter an existing ID to delete a classical music.");
+        const videogameExist = await mongodb.getDatabase().db().collection('videogame').findOne({ _id: new ObjectId(req.params.id) });
+        if(!videogameExist) {
+            throw new Error("Must enter an existing ID to delete an entry.");
         }
 
         try {
-            const classicalId = new ObjectId(req.params.id);
-            const result = await mongodb.getDatabase().db().collection('classical').deleteOne({_id: classicalId});
+            const videogameId = new ObjectId(req.params.id);
+            const result = await mongodb.getDatabase().db().collection('videogame').deleteOne({_id: videogameId});
             if (result.deletedCount > 0) {
                 res.status(204).send();
             }
         } catch (error) {
-            res.status(500).json(result.error || "An error occurred while deleting a classical piece.");
+            res.status(500).json(result.error || "An error occurred while deleting an entry.");
         }
     } catch (error) {
         res.status(400).json({error: error.message});
@@ -161,7 +157,7 @@ const eraseOne = async (req, res) => {
 module.exports = {
     getAll,
     getSingle,
-    getPeriod,
+    getVideogame,
     createOne,
     updateOne,
     eraseOne

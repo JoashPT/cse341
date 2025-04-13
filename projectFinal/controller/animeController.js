@@ -6,7 +6,7 @@ const getAll = async (req, res) => {
     mongodb
         .getDatabase()
         .db()
-        .collection('contemporary')
+        .collection('anime')
         .find()
         .toArray()
         .then((list) => {
@@ -23,24 +23,24 @@ const getAll = async (req, res) => {
 const getSingle = async (req, res) => {
     try {
         if (!ObjectId.isValid(req.params.id)) {
-            throw new Error('Must enter a valid ID to find contemporary music.');
+            throw new Error('Must enter a valid ID to find anime music.');
         }
         
-        const contemporaryId = new ObjectId(req.params.id);
-        const contemporaryExist = await mongodb.getDatabase().db().collection('contemporary').findOne({ _id: new ObjectId(req.params.id) });
-                if(!contemporaryExist) {
-                    throw new Error("Must enter an existing ID to find contemporary music.");
+        const animeId = new ObjectId(req.params.id);
+        const animeExist = await mongodb.getDatabase().db().collection('anime').findOne({ _id: new ObjectId(req.params.id) });
+                if(!animeExist) {
+                    throw new Error("Must enter an existing ID to find anime music.");
                 }
 
         mongodb
             .getDatabase()
             .db()
-            .collection('contemporary')
-            .find({_id: contemporaryId})
+            .collection('anime')
+            .find({_id: animeId})
             .toArray()
-            .then((contemporary) => {
+            .then((anime) => {
                 res.setHeader('Content-Type', 'application/json');
-                res.status(200).json(contemporary[0])
+                res.status(200).json(anime[0])
             })
             .catch((err) => {
                 if (err) {
@@ -52,20 +52,45 @@ const getSingle = async (req, res) => {
     }
 }
 
-const getGenre = async (req, res) => {
+const getAnime = async (req, res) => {
     try {
         mongodb
             .getDatabase()
             .db()
-            .collection('contemporary')
-            .find({genre: req.params.genre})
+            .collection('anime')
+            .find({anime: req.params.anime})
             .toArray()
-            .then((contemporary) => {
-                if (contemporary.length === 0) {
+            .then((anime) => {
+                if (anime.length === 0) {
                     throw new Error('No song found with the given genre.');
                   }
                 res.setHeader('Content-Type', 'application/json');
-                res.status(200).json(contemporary)
+                res.status(200).json(anime)
+            })
+            .catch((err) => {
+                if (err) {
+                    res.status(400).json({error: err.message});
+                }
+            })
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+}
+
+const getBand = async (req, res) => {
+    try {
+        mongodb
+            .getDatabase()
+            .db()
+            .collection('anime')
+            .find({band: req.params.band})
+            .toArray()
+            .then((band) => {
+                if (band.length === 0) {
+                    throw new Error('No song found with the given genre.');
+                  }
+                res.setHeader('Content-Type', 'application/json');
+                res.status(200).json(band)
             })
             .catch((err) => {
                 if (err) {
@@ -79,16 +104,16 @@ const getGenre = async (req, res) => {
 
 const createOne = async (req, res) => {
     try {
-        const contemporaryData = {
+        const animeData = {
             title: req.body.title,
-            album: req.body.album,
+            anime: req.body.anime,
             band: req.body.band,
+            soundtrack: req.body.soundtrack,
             date: req.body.date,
-            genre: req.body.genre,
             link: req.body.link,
             comment: req.body.comment
         };
-        const result = await mongodb.getDatabase().db().collection('contemporary').insertOne(contemporaryData);
+        const result = await mongodb.getDatabase().db().collection('anime').insertOne(animeData);
         if (result.acknowledged) {
             res.status(204).send();
         }
@@ -100,26 +125,26 @@ const createOne = async (req, res) => {
 const updateOne = async (req, res) => {
     try {
         if (!ObjectId.isValid(req.params.id)) {
-            throw new Error("Must enter a valid ID to update contemporary music.");
+            throw new Error("Must enter a valid ID to update anime music.");
         }
 
-        const contemporaryExist = await mongodb.getDatabase().db().collection('contemporary').findOne({ _id: new ObjectId(req.params.id) });
-            if(!contemporaryExist) {
-                throw new Error("Must enter an existing ID to update contemporary music.");
+        const animeExist = await mongodb.getDatabase().db().collection('anime').findOne({ _id: new ObjectId(req.params.id) });
+            if(!animeExist) {
+                throw new Error("Must enter an existing ID to update anime music.");
             }
         
         try {
-            const contemporaryId = new ObjectId(req.params.id);
-            const contemporaryData = {
+            const animeId = new ObjectId(req.params.id);
+            const animeData = {
                 title: req.body.title,
-                album: req.body.album,
+                anime: req.body.anime,
                 band: req.body.band,
+                soundtrack: req.body.soundtrack,
                 date: req.body.date,
-                genre: req.body.genre,
                 link: req.body.link,
                 comment: req.body.comment
             };
-            const result = await mongodb.getDatabase().db().collection('contemporary').replaceOne({_id: contemporaryId}, contemporaryData);
+            const result = await mongodb.getDatabase().db().collection('anime').replaceOne({_id: animeId}, animeData);
             if (result.modifiedCount > 0) {
                 res.status(204).send();
             }
@@ -137,14 +162,14 @@ const eraseOne = async (req, res) => {
             throw new Error("Must enter a valid ID to delete an entry.");
         }
 
-        const contemporaryExist = await mongodb.getDatabase().db().collection('contemporary').findOne({ _id: new ObjectId(req.params.id) });
-        if(!contemporaryExist) {
+        const animeExist = await mongodb.getDatabase().db().collection('anime').findOne({ _id: new ObjectId(req.params.id) });
+        if(!animeExist) {
             throw new Error("Must enter an existing ID to delete an entry.");
         }
 
         try {
-            const contemporaryId = new ObjectId(req.params.id);
-            const result = await mongodb.getDatabase().db().collection('contemporary').deleteOne({_id: contemporaryId});
+            const animeId = new ObjectId(req.params.id);
+            const result = await mongodb.getDatabase().db().collection('anime').deleteOne({_id: animeId});
             if (result.deletedCount > 0) {
                 res.status(204).send();
             }
@@ -159,7 +184,8 @@ const eraseOne = async (req, res) => {
 module.exports = {
     getAll,
     getSingle,
-    getGenre,
+    getAnime,
+    getBand,
     createOne,
     updateOne,
     eraseOne
