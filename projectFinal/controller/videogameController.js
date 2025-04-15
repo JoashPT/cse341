@@ -3,21 +3,16 @@ const ObjectId = require('mongodb').ObjectId;
 
 
 const getAll = async (req, res) => {
-    mongodb
-        .getDatabase()
-        .db()
-        .collection('videogame')
-        .find()
-        .toArray()
-        .then((list) => {
-            res.setHeader('Content-Type', 'application/json');
-            res.status(200).json(list);
-        })
-        .catch((err) => {
-            if (err) {
-                res.status(400).json({message: err});
-            }  
-        })
+    try {
+        const db = await mongodb.dbase();
+        const list = await db.collection('videogame').find().toArray()
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json(list);
+    } catch (err) {
+        if (err) {
+            res.status(400).json({message: err});
+        }  
+    }
 }
 
 const getSingle = async (req, res) => {

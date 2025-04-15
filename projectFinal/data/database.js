@@ -27,7 +27,11 @@ const getDatabase = () => {
     return database;
 }
 
+
+const dbase = async () => {return await getDatabase().db();}
+
 module.exports = {
     initDb,
-    getDatabase
-}
+    getDatabase,
+    dbase
+};

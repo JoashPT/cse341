@@ -1,23 +1,18 @@
 const mongodb = require('../data/database');
+const { dbase } = require('../data/database');
 const ObjectId = require('mongodb').ObjectId;
 
-
 const getAll = async (req, res) => {
-    mongodb
-        .getDatabase()
-        .db()
-        .collection('anime')
-        .find()
-        .toArray()
-        .then((list) => {
-            res.setHeader('Content-Type', 'application/json');
-            res.status(200).json(list);
-        })
-        .catch((err) => {
-            if (err) {
-                res.status(400).json({message: err});
-            }  
-        })
+    try {
+        const db = await dbase();
+        const list = await db.collection('anime').find().toArray()
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json(list);
+    } catch (err) {
+        if (err) {
+            res.status(400).json({message: err});
+        }  
+    }
 }
 
 const getSingle = async (req, res) => {
@@ -31,7 +26,6 @@ const getSingle = async (req, res) => {
                 if(!animeExist) {
                     throw new Error("Must enter an existing ID to find anime music.");
                 }
-
         mongodb
             .getDatabase()
             .db()
@@ -188,5 +182,5 @@ module.exports = {
     getBand,
     createOne,
     updateOne,
-    eraseOne
+    eraseOne,
 }
